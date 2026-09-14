@@ -26,7 +26,10 @@ CREATE TABLE professor (
   id SERIAL PRIMARY KEY,
   -- UNIQUE porque um mesmo usuario nao pode virar dois professores
   usuario_id INTEGER NOT NULL UNIQUE REFERENCES usuario(id),
-  especialidade VARCHAR(150)
+  telefone VARCHAR(30) NOT NULL,
+  data_nascimento DATE,
+  cpf VARCHAR(14) NOT NULL UNIQUE,
+  especialidades TEXT NOT NULL
 );
 
 CREATE TABLE aluno (
