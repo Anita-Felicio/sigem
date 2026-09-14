@@ -91,13 +91,19 @@ main h2 {
 }
 
 .campo input,
-.campo select {
+.campo select,
+.campo textarea {
   padding: 0.55rem;
   border: 1px solid #bbb;
   border-radius: 4px;
   font-size: 1rem;
   /* sem isso o input estoura a largura do cartao no celular */
   width: 100%;
+}
+
+.campo textarea {
+  resize: vertical;
+  font-family: inherit;
 }
 
 /* Campo com um botao colado do lado, como o "mostrar senha" */
