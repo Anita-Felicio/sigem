@@ -48,6 +48,11 @@ function validarSenha(senha) {
   return null;
 }
 
+function validarConfirmacaoSenha(senha, confirmacao) {
+  if (senha !== confirmacao) return 'As senhas nao coincidem';
+  return null;
+}
+
 // A data chega como texto "AAAA-MM-DD", que e o formato do input type="date".
 // Recusa data no futuro e data absurdamente antiga: os dois casos sao erro de
 // digitacao, nao aluno de verdade.
@@ -66,6 +71,56 @@ function validarDataNascimento(data) {
   maisAntigaAceita.setFullYear(hoje.getFullYear() - IDADE_MAXIMA_ANOS);
   if (nascimento < maisAntigaAceita) {
     return `A data de nascimento nao pode ser anterior a ${IDADE_MAXIMA_ANOS} anos atras`;
+  }
+  return null;
+}
+
+function validarTelefone(telefone) {
+  if (!telefone || telefone.trim().length === 0) return 'O telefone e obrigatorio';
+  if (telefone.length > 30) return 'O telefone pode ter no maximo 30 caracteres';
+
+  const digitos = telefone.replace(/\D/g, '');
+  if (digitos.length < 8 || digitos.length > 15) {
+    return 'O telefone informado nao e valido';
+  }
+  if (!/^[\d\s()+.-]+$/.test(telefone)) return 'O telefone informado nao e valido';
+  return null;
+}
+
+function normalizarCpf(cpf) {
+  return (cpf || '').replace(/\D/g, '');
+}
+
+function validarCpf(cpf) {
+  if (!cpf || cpf.trim().length === 0) return 'O CPF e obrigatorio';
+  if (!/^[\d.\-\s]+$/.test(cpf)) return 'O CPF informado nao e valido';
+
+  const numero = normalizarCpf(cpf);
+  if (numero.length !== 11 || /^(\d)\1{10}$/.test(numero)) {
+    return 'O CPF informado nao e valido';
+  }
+
+  let soma = 0;
+  for (let i = 0; i < 9; i += 1) soma += Number(numero[i]) * (10 - i);
+  let resto = (soma * 10) % 11;
+  if (resto === 10) resto = 0;
+  if (resto !== Number(numero[9])) return 'O CPF informado nao e valido';
+
+  soma = 0;
+  for (let i = 0; i < 10; i += 1) soma += Number(numero[i]) * (11 - i);
+  resto = (soma * 10) % 11;
+  if (resto === 10) resto = 0;
+  if (resto !== Number(numero[10])) return 'O CPF informado nao e valido';
+
+  return null;
+}
+
+function validarEspecialidades(especialidades) {
+  if (!especialidades || especialidades.trim().length === 0) {
+    return 'Informe pelo menos uma especialidade';
+  }
+  if (especialidades.trim().length > 500) {
+    return 'As especialidades podem ter no maximo 500 caracteres';
   }
   return null;
 }
@@ -90,6 +145,11 @@ module.exports = {
   validarNome,
   validarEmail,
   validarSenha,
+  validarConfirmacaoSenha,
   validarDataNascimento,
-  validarCadastro
+  validarCadastro,
+  validarTelefone,
+  normalizarCpf,
+  validarCpf,
+  validarEspecialidades
 };
